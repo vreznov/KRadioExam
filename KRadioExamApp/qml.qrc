@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>ques.json</file>
+        <file>KExercises.js</file>
+        <file>ques2.json</file>
+    </qresource>
+</RCC>
