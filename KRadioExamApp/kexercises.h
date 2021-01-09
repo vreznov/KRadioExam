@@ -1,16 +1,25 @@
 #ifndef KLOAD_H
 #define KLOAD_H
 
-/***************************************************************
+/*******************************************************
  * @file: kload.h
- * @brief: 载入json文件到内存对象，可提供随机访问和顺序访问
+ * @brief: 载入json习题，并提供顺序访问和随机访问模式
+ * 使用方法
+ *  1.载入json
+ *  2.  顺序访问模式：
+ *          setSequenceMode()
+ *
+ *      随机访问模式:
+ *          setRandomMode()
+ *  3. 获取下一/上一习题编号 nextItem() lastItem()
+ *  4. 获取问题 readQuestion（）
+ *     获取选项 readAns()
+ *
+ * 关于随机模式的说明：
+ *  setRandomIndex()会在没有使用的索引编号中随机挑选一个编号
  *
  *
- *
- *
- *
- *
- * *************************************************************/
+ * *****************************************************/
 
 #include <QObject>
 #include <QFile>
@@ -28,26 +37,6 @@
 #include <random>
 #include <QRandomGenerator>
 
-/*******************************************************
- * @file: kload.h
- * @brief: 载入json习题，并提供顺序访问和随机访问模式
- * 使用方法
- *  1.载入json
- *  2.  顺序访问模式：
- *          setSequenceMode()
- *          setIndex()
- *
- *      随机访问模式:
- *          setRandomMode()
- *          setRandomIndex()
- *  3. 获取问题 readQuestion（）
- *     获取选项 readAns()
- *
- * 关于随机模式的说明：
- *  setRandomIndex()会在没有使用的索引编号中随机挑选一个编号
- *
- *
- * *****************************************************/
 
 class KExercises : public QObject
 {

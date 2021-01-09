@@ -20,7 +20,7 @@ Window {
     //属性对象
     property int exer_index: 0
 
-    //方法
+    //测试方法
     function showLog(){
         console.log('hello')
     }
