@@ -6,7 +6,7 @@ import "KExercises.js" as Ke
 Window {
     id: window
     visible: true
-    width: 720
+    width: 500
     height: 800
     title: qsTr("无线电A证考试习题")
 
@@ -61,6 +61,18 @@ Window {
         KL.lastItem();
         showindex();
         refreshQuesAns()
+    }
+
+    //设置指定选项颜色为淡蓝色
+    function setAnsColor( a_index, a_color = 'lightblue') {
+        var recs = new Array(reca, recb, recc, recd)
+        if(a_index >= 0 && a_index <= 3) {
+            for(var i=0; i<4; i++) {
+                var v1 = recs[1]
+                if(a_index === i) { recs[i].color = a_color }
+                else { recs[i].color = 'white' }
+            }
+        }
     }
 
     Text {
@@ -120,14 +132,16 @@ Window {
             anchors.right: parent.right
             anchors.left: parent.left
             anchors.top: parent.top
-            anchors.rightMargin: 10
-            anchors.leftMargin: 10
+            anchors.rightMargin: 5
+            anchors.leftMargin: 5
             anchors.bottomMargin: -60
             anchors.topMargin: 20
 
             Text {
                 id: element1
                 text: qsTr("习题编号")
+                anchors.left: parent.left
+                anchors.leftMargin: 5
                 anchors.verticalCenter: parent.verticalCenter
                 font.pixelSize: 15
             }
@@ -178,7 +192,7 @@ Window {
                 text: qsTr("顺序模式")
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
-                anchors.rightMargin: 10
+                anchors.rightMargin: 5
 
                 onCheckedChanged: {
                     if(sb.checked) {
@@ -193,18 +207,29 @@ Window {
             }
         }
 
-        Text {
-            id: tx_ques
-            y: 71
-            height: { contentHeight < 100 ? 100 : contentHeight }
-            text: qsTr("问题")
-            font.bold: false
-            wrapMode: Text.WordWrap
+        Rectangle {
+            id: rec_ques
+            anchors.top: rec_header.bottom
+            anchors.topMargin: 10
             anchors.right: parent.right
-            anchors.rightMargin: 10
+            anchors.rightMargin: 5
             anchors.left: parent.left
-            anchors.leftMargin: 10
-            font.pixelSize: 15
+            anchors.leftMargin: 5
+            border.width: 1
+            height: 100
+            Text {
+                id: tx_ques
+                text: qsTr("问题")
+                font.bold: false
+                wrapMode: Text.WordWrap
+                font.pixelSize: 15
+                anchors.fill: parent
+                height: tx_ques.contentHeight
+
+                onHeightChanged: {
+                    parent.height = contentHeight < 100 ? 100 : contentHeight
+                }
+            }
         }
 
         Column{
@@ -213,8 +238,8 @@ Window {
             anchors.leftMargin: 0
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 260
-            anchors.top: tx_ques.bottom
-            anchors.topMargin: 10
+            anchors.top: rec_ques.bottom
+            anchors.topMargin: 20
             anchors.right: parent.right
             anchors.rightMargin: 0
 
@@ -226,10 +251,20 @@ Window {
                 anchors.rightMargin: 5
                 anchors.left: parent.left
                 anchors.leftMargin: 5
+                border.width: 1
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        setAnsColor(0)
+                    }
+                }
+
                 Text {
                     id: txa
                     anchors.fill: parent
                     text: qsTr("选项A")
+                    anchors.leftMargin: 5
                     wrapMode: Text.WordWrap
                     font.pixelSize: 15
                     height: contentHeight
@@ -239,15 +274,25 @@ Window {
 
             Rectangle{
                 id: recb
-                height:  { txb.contentHeight < 30 ? 30 : txa.contentHeight }
+                height:  { txb.contentHeight < 30 ? 30 : txb.contentHeight }
                 anchors.right: parent.right
                 anchors.rightMargin: 5
                 anchors.left: parent.left
                 anchors.leftMargin: 5
+                border.width: 1
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        setAnsColor(1)
+                    }
+                }
+
                 Text {
                     id: txb
                     anchors.fill: parent
                     text: qsTr("选项B")
+                    anchors.leftMargin: 5
                     wrapMode: Text.WordWrap
                     font.pixelSize: 15
                     height: contentHeight
@@ -257,15 +302,25 @@ Window {
 
             Rectangle{
                 id: recc
-                height:  { txc.contentHeight < 30 ? 30 : txa.contentHeight }
+                height:  { txc.contentHeight < 30 ? 30 : txc.contentHeight }
                 anchors.right: parent.right
                 anchors.rightMargin: 5
                 anchors.left: parent.left
                 anchors.leftMargin: 5
+                border.width: 1
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        setAnsColor(2)
+                    }
+                }
+
                 Text {
                     id: txc
                     anchors.fill: parent
                     text: qsTr("选项C")
+                    anchors.leftMargin: 5
                     wrapMode: Text.WordWrap
                     font.pixelSize: 15
                     height: contentHeight
@@ -275,15 +330,25 @@ Window {
 
             Rectangle{
                 id: recd
-                height:  { txd.contentHeight < 30 ? 30 : txa.contentHeight }
+                height:  { txd.contentHeight < 30 ? 30 : txd.contentHeight }
                 anchors.right: parent.right
                 anchors.rightMargin: 5
                 anchors.left: parent.left
                 anchors.leftMargin: 5
+                border.width: 1
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        setAnsColor(3)
+                    }
+                }
+
                 Text {
                     id: txd
                     anchors.fill: parent
                     text: qsTr("选项D")
+                    anchors.leftMargin: 5
                     wrapMode: Text.WordWrap
                     font.pixelSize: 15
                     height: contentHeight
@@ -328,7 +393,7 @@ Window {
             anchors.verticalCenter: parent.verticalCenter
 
             onClicked: {
-                reca.color = 'lightgreen'
+                setAnsColor(0, 'lightgreen')
             }
         }
 
@@ -355,7 +420,8 @@ Window {
 
 /*##^##
 Designer {
-    D{i:2;anchors_height:198;anchors_width:523;anchors_x:60;anchors_y:112}D{i:20;anchors_width:200}
-D{i:21;anchors_x:250}D{i:22;anchors_width:200;anchors_x:444}
+    D{i:9;anchors_y:71}D{i:2;anchors_height:198;anchors_width:523;anchors_x:60;anchors_y:112}
+D{i:21;anchors_width:200;anchors_x:250}D{i:22;anchors_width:200;anchors_x:444}D{i:23;anchors_width:200;anchors_x:444}
+D{i:20;anchors_width:200}
 }
 ##^##*/
