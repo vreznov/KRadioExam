@@ -47,6 +47,22 @@ Window {
         recd.color = 'white'
     }
 
+    //下一题
+    function nextBtnClick() {
+        //生成习题编号
+        KL.nextItem();
+        showindex();
+        refreshQuesAns()
+    }
+
+    //上一题
+    function lastBtnClick() {
+        //生成习题编号
+        KL.lastItem();
+        showindex();
+        refreshQuesAns()
+    }
+
     Text {
         id: name
         x: 10; y: 10
@@ -62,9 +78,41 @@ Window {
         anchors.left: parent.left
         anchors.leftMargin: 20
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 50
+        anchors.bottomMargin: 80
         anchors.top: parent.top
         anchors.topMargin: 50
+
+        MouseArea {
+            anchors.fill: parent
+
+            property var stX: 0
+            property var stY: 0
+            property bool mchanged: false //是否已经滑动过了，滑动过了就不再计算滑动，直到释放按钮
+
+            onPressed: {
+                stX = mouseX
+                stY = mouseY
+            }
+            onReleased: {
+                mchanged = false
+            }
+            onPositionChanged: {
+                if( mchanged ) return
+
+                var difv = mouseX - stX
+                console.log(difv)
+                if( difv > 100 ) {
+                    //生成习题编号
+                    lastBtnClick()
+                    mchanged = true
+                }
+                else if( difv < -100) {
+                    //生成习题编号
+                    nextBtnClick()
+                    mchanged = true
+                }
+            }
+        }
 
         Rectangle{
             id: rec_header
@@ -80,6 +128,7 @@ Window {
             Text {
                 id: element1
                 text: qsTr("习题编号")
+                anchors.verticalCenter: parent.verticalCenter
                 font.pixelSize: 15
             }
 
@@ -87,6 +136,7 @@ Window {
                 id: rectangle1
                 width: 80
                 height: 30
+                anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
                 anchors.leftMargin: 80
                 border.width: 2
@@ -126,6 +176,7 @@ Window {
             Switch {
                 id: sb
                 text: qsTr("顺序模式")
+                anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin: 10
 
@@ -157,20 +208,19 @@ Window {
         }
 
         Column{
-            spacing: 20
+            spacing: 10
             anchors.left: parent.left
-            anchors.leftMargin: 20
+            anchors.leftMargin: 0
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 260
             anchors.top: tx_ques.bottom
             anchors.topMargin: 10
             anchors.right: parent.right
-            anchors.rightMargin: 20
+            anchors.rightMargin: 0
 
 
             Rectangle{
                 id: reca
-                y: 109
                 height: { txa.contentHeight < 30 ? 30 : txa.contentHeight }
                 anchors.right: parent.right
                 anchors.rightMargin: 5
@@ -182,13 +232,13 @@ Window {
                     text: qsTr("选项A")
                     wrapMode: Text.WordWrap
                     font.pixelSize: 15
+                    height: contentHeight
                 }
 
             }
 
             Rectangle{
                 id: recb
-                y: 109
                 height:  { txb.contentHeight < 30 ? 30 : txa.contentHeight }
                 anchors.right: parent.right
                 anchors.rightMargin: 5
@@ -200,13 +250,13 @@ Window {
                     text: qsTr("选项B")
                     wrapMode: Text.WordWrap
                     font.pixelSize: 15
+                    height: contentHeight
                 }
 
             }
 
             Rectangle{
                 id: recc
-                y: 109
                 height:  { txc.contentHeight < 30 ? 30 : txa.contentHeight }
                 anchors.right: parent.right
                 anchors.rightMargin: 5
@@ -218,13 +268,13 @@ Window {
                     text: qsTr("选项C")
                     wrapMode: Text.WordWrap
                     font.pixelSize: 15
+                    height: contentHeight
                 }
 
             }
 
             Rectangle{
                 id: recd
-                y: 109
                 height:  { txd.contentHeight < 30 ? 30 : txa.contentHeight }
                 anchors.right: parent.right
                 anchors.rightMargin: 5
@@ -236,60 +286,76 @@ Window {
                     text: qsTr("选项D")
                     wrapMode: Text.WordWrap
                     font.pixelSize: 15
+                    height: contentHeight
                 }
 
             }
         }
+    }
 
-        Row{
-            y: 324
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 20
-            anchors.right: parent.right
-            anchors.rightMargin: 10
+    Rectangle{
+        id: rectangle2
+        y: 324
+        height: 60
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 20
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+
+        Button {
+            id: btn_next
+            text: qsTr("下一题")
+            anchors.right: btn_showAns.left
+            anchors.rightMargin: 20
             anchors.left: parent.left
-            anchors.leftMargin: 10
-            spacing: 10
+            anchors.leftMargin: 20
+            anchors.verticalCenter: parent.verticalCenter
 
-            Button {
-                id: button
-                text: qsTr("上一题")
-
-                onClicked: {
-                    //生成习题编号
-                    KL.lastItem();
-                    showindex();
-                    refreshQuesAns();
-                }
+            onClicked: {
+                //生成习题编号
+                nextBtnClick()
             }
+        }
 
-            Button {
-                id: button1
-                text: qsTr("查看答案")
+        Button {
+            id: btn_showAns
+            x: 250
+            y: -1
+            text: qsTr("查看答案")
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
 
-                onClicked: {
-                    reca.color = 'lightgreen'
-                }
+            onClicked: {
+                reca.color = 'lightgreen'
             }
+        }
 
-            Button {
-                id: button2
-                text: qsTr("下一题")
+        Button {
+            id: btn_last
+            y: -4
+            text: qsTr("上一题")
+            anchors.left: btn_showAns.right
+            anchors.leftMargin: 20
+            anchors.right: parent.right
+            anchors.rightMargin: 20
+            anchors.verticalCenter: parent.verticalCenter
 
-                onClicked: {
-                    //生成习题编号
-                    KL.nextItem();
-                    showindex();
-                    refreshQuesAns();
-                }
+            onClicked: {
+                //生成习题编号
+                lastBtnClick()
             }
         }
     }
 
 }
 
+
+
 /*##^##
 Designer {
-    D{i:2;anchors_height:198;anchors_width:523;anchors_x:60;anchors_y:112}
+    D{i:2;anchors_height:198;anchors_width:523;anchors_x:60;anchors_y:112}D{i:20;anchors_width:200}
+D{i:21;anchors_x:250}D{i:22;anchors_width:200;anchors_x:444}
 }
 ##^##*/
