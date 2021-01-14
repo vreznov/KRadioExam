@@ -17,9 +17,11 @@ Window {
         Ke.init();
     }
 
-    //属性对象
+    //==============属性对象
+    //习题索引
     property int exer_index: 0
 
+    //==============方法
     //测试方法
     function showLog(){
         console.log('hello')
@@ -39,6 +41,7 @@ Window {
         txb.text = KL.readAns(1);
         txc.text = KL.readAns(2);
         txd.text = KL.readAns(3);
+
 
         //刷新显示的答案背景
         reca.color = 'white'
@@ -393,7 +396,7 @@ Window {
             anchors.verticalCenter: parent.verticalCenter
 
             onClicked: {
-                setAnsColor(0, 'lightgreen')
+                setAnsColor(KL.readCurAns(), 'lightgreen')
             }
         }
 

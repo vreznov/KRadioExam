@@ -67,11 +67,23 @@ QString KExercises::readAns(int a_index)
 {
     if(a_index >= 0 and a_index <= 3) {
         QStringList sl = {"A. ", "B. ", "C. ", "D. "};
-        return (sl[a_index] + m_items[m_curSel].m_ans[a_index]);
+
+        if(!m_randomMode) {  //答案为A
+            return (sl[a_index] + m_items[m_curSel].m_ans[a_index]);
+        }
+        else {  //答案为随机选项，返回选择题目的随机答案
+            int index = m_curRandomAns[a_index];
+            return (sl[a_index] + m_items[m_curSel].m_ans[index]);
+        }
     }
     else {
         return tr("invalid answer index");
     }
+}
+
+int KExercises::readCurAns()
+{
+    return m_curCorrecrAns[m_curSel];
 }
 
 void KExercises::setRandomMode()
@@ -82,6 +94,9 @@ void KExercises::setRandomMode()
     for(int i=0; i<m_items.size(); i++) {
         m_randomUnSelected.append(i);
     }
+
+    m_curCorrecrAns.clear();
+    m_curCorrecrAns.resize(m_items.size());
 }
 
 void KExercises::setSequenceMode(int a_index)
@@ -93,11 +108,15 @@ void KExercises::setSequenceMode(int a_index)
     else {
         m_curSel = 0;
     }
+
+    //将正确答案全部标记为0-选项A
+    m_curCorrecrAns.clear();
+    m_curCorrecrAns.resize(m_items.size());
+    m_curCorrecrAns.fill(0);
 }
 
 bool KExercises::nextItem()
 {
-
     if(m_randomMode) {  //随机访问模式
         /* 随机模式访问逻辑
      * 1.生成一个 0～未使用数量直接的随机数
@@ -117,6 +136,11 @@ bool KExercises::nextItem()
 
         m_randomUnSelected.removeAt(index);
         m_randomSelected.append(m_curSel);
+
+        //生成随机答案并记录正确的答案编号
+        m_curRandomAns = randomABCD();
+        m_curCorrecrAns[m_curSel] = m_curRandomAns.indexOf(0);
+
         return true;
     }
     else {  //顺序访问模式
@@ -168,4 +192,16 @@ bool KExercises::setCurIndex(int a_index)
     else {
         return false;
     }
+}
+
+QVector<int> KExercises::randomABCD()
+{
+    QVector<int> v = {0, 1, 2, 3};
+
+    std::random_device rd;
+    std::mt19937 g(rd());
+
+    std::shuffle(v.begin(), v.end(), g);
+
+    return v;
 }

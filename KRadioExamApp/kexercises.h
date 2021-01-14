@@ -36,6 +36,8 @@
 #include <QScopedPointer>
 #include <random>
 #include <QRandomGenerator>
+#include <vector>
+#include <QVector>
 
 
 class KExercises : public QObject
@@ -63,8 +65,11 @@ public:
     //! 获取当前的问题
     Q_INVOKABLE QString readQuestion();
 
-    //! 获取当前习题第index个答案
+    //! 获取当前习题第index个答案们，并记录正确答案的编号
     Q_INVOKABLE QString readAns(int a_index);
+
+    //! 获取当前问题的正确答案编号（ABCD）
+    Q_INVOKABLE int readCurAns();
 
     //! 设置随机模式
     Q_INVOKABLE void setRandomMode();
@@ -86,12 +91,17 @@ public:
     //! 将当前的索引设置为指定编号，如果不在有效范围，则返回错误
     Q_INVOKABLE bool setCurIndex(int a_index);
 
+    //! 生成0-3不重复的随机数，用于对答案排序
+    QVector<int> randomABCD();
+
 private:
     QList<KExercises_item> m_items;  //习题们
     int m_curSel = 0;  //当前选择的习题
     bool m_randomMode = false;
     QList<int> m_randomSelected;  //随机模式下已经使用过的习题
     QList<int> m_randomUnSelected;  //随机模式下未使用过的习题
+    QVector<int> m_curCorrecrAns;  //当前的习题正确答案，在每次nextItem函数时计算并写入
+    QVector<int> m_curRandomAns;  //当前习题的随机答案，颠倒顺序的ABCD，在随机模式下由每次的nextItem函数生成
 
 signals:
 
